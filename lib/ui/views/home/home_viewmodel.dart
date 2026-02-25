@@ -29,12 +29,14 @@ class HomeViewModel extends BaseViewModel {
 
   void setSelectedTab(int index) {
     _selectedTab = index;
-    // Clear both controllers to avoid stale text
+    // Clear text, results, and errors on tab switch
     urlController.clear();
     emailController.clear();
     _urlInput = '';
     _emailInput = '';
+    _currentResult = null;
     _errorMessage = null;
+    _currentEmailResult = null;
     _emailErrorMessage = null;
     notifyListeners();
   }
