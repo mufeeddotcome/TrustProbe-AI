@@ -153,13 +153,13 @@ class EmailParser {
     return headers;
   }
 
-  /// Extract email address from a header value like "John Doe <john@example.com>"
+  /// Extract email address from a header value like `"John Doe <john@example.com>"`
   String? _extractEmail(String headerValue) {
     final match = _emailPattern.firstMatch(headerValue);
     return match?.group(0);
   }
 
-  /// Extract display name from "John Doe <john@example.com>"
+  /// Extract display name from `"John Doe <john@example.com>"`
   String? _extractDisplayName(String headerValue) {
     final angleBracket = headerValue.indexOf('<');
     if (angleBracket > 0) {

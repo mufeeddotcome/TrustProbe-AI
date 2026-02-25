@@ -287,8 +287,9 @@ class EmailContentAnalyzer {
     if (alphaCount > 0 && upperCount / alphaCount > 0.4) anomalyScore += 0.3;
 
     // Very short body (potential lure to click link)
-    if (body.length < 50 && body.contains(RegExp(r'https?://')))
+    if (body.length < 50 && body.contains(RegExp(r'https?://'))) {
       anomalyScore += 0.2;
+    }
 
     // Multiple consecutive dots or special chars
     if (RegExp(r'\.{3,}|!{3,}|\?{3,}').hasMatch(body)) anomalyScore += 0.2;

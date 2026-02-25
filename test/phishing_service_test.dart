@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inline_logger/inline_logger.dart';
 import 'package:trustprobe_ai/services/phishing_service.dart';
 import 'package:trustprobe_ai/services/multi_modal_engine.dart';
 import 'package:trustprobe_ai/services/url_feature_extractor.dart';
@@ -302,28 +303,46 @@ void main() {
     test('Benchmark achieves >= 95% accuracy', () {
       final result = benchmarkService.evaluate();
 
-      print('Benchmark Results:');
-      print('  Total Samples: ${result.totalSamples}');
-      print('  Accuracy: ${result.accuracyPercent}');
-      print('  Precision: ${(result.precision * 100).toStringAsFixed(1)}%');
-      print('  Recall: ${(result.recall * 100).toStringAsFixed(1)}%');
-      print('  F1 Score: ${(result.f1Score * 100).toStringAsFixed(1)}%');
-      print('  True Positives: ${result.truePositives}');
-      print('  True Negatives: ${result.trueNegatives}');
-      print('  False Positives: ${result.falsePositives}');
-      print('  False Negatives: ${result.falseNegatives}');
+      Logger.info('Benchmark Results:', 'BenchmarkTest');
+      Logger.info('  Total Samples: ${result.totalSamples}', 'BenchmarkTest');
+      Logger.info('  Accuracy: ${result.accuracyPercent}', 'BenchmarkTest');
+      Logger.info(
+        '  Precision: ${(result.precision * 100).toStringAsFixed(1)}%',
+        'BenchmarkTest',
+      );
+      Logger.info(
+        '  Recall: ${(result.recall * 100).toStringAsFixed(1)}%',
+        'BenchmarkTest',
+      );
+      Logger.info(
+        '  F1 Score: ${(result.f1Score * 100).toStringAsFixed(1)}%',
+        'BenchmarkTest',
+      );
+      Logger.info('  True Positives: ${result.truePositives}', 'BenchmarkTest');
+      Logger.info('  True Negatives: ${result.trueNegatives}', 'BenchmarkTest');
+      Logger.info(
+        '  False Positives: ${result.falsePositives}',
+        'BenchmarkTest',
+      );
+      Logger.info(
+        '  False Negatives: ${result.falseNegatives}',
+        'BenchmarkTest',
+      );
 
       if (result.errors.isNotEmpty) {
-        print('  Errors (${result.errors.length}):');
+        Logger.info('  Errors (${result.errors.length}):', 'BenchmarkTest');
         for (final error in result.errors) {
-          print('    $error');
+          Logger.info('    $error', 'BenchmarkTest');
         }
       }
 
       final perSource = result.perSourceAccuracy;
-      print('  Per-source accuracy:');
+      Logger.info('  Per-source accuracy:', 'BenchmarkTest');
       for (final entry in perSource.entries) {
-        print('    ${entry.key}: ${(entry.value * 100).toStringAsFixed(1)}%');
+        Logger.info(
+          '    ${entry.key}: ${(entry.value * 100).toStringAsFixed(1)}%',
+          'BenchmarkTest',
+        );
       }
 
       expect(
