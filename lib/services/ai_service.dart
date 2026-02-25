@@ -10,11 +10,19 @@ import 'package:http/http.dart' as http;
 ///
 /// Uses Llama 3.3 70B (open-source) to provide intelligent,
 /// detailed phishing threat analysis beyond rule-based heuristics.
+/// Receives multi-modal feature analysis context for enhanced accuracy.
 class AiService {
   /// System prompt that guides the LLM for phishing analysis
   static const _systemPrompt = '''
 You are TrustProbe AI, an expert cybersecurity analyst specializing in phishing URL detection.
-When given a URL and its heuristic risk data, provide a detailed security analysis.
+You are part of a multi-modal AI phishing detection system that combines:
+1. CNN-based character-level URL analysis (25+ lexical features including Shannon entropy, character distributions, n-gram patterns)
+2. LSTM-based sequential pattern analysis (8 features including character transition anomalies, bigram analysis, positional distribution)
+3. Host and domain attribute analysis (10 features including TLD reputation, brand impersonation, domain age estimation)
+4. SSL/security attribute analysis (5 features including HTTPS verification, certificate indicators)
+5. Content analysis (7 features including login page detection, data exfiltration patterns)
+
+When given a URL, its multi-modal risk data, and per-modality scores, provide a detailed security analysis.
 
 You MUST respond in valid JSON format with exactly these fields:
 {
@@ -32,6 +40,7 @@ Guidelines:
 - Keep threatSummary under 100 words
 - Keep recommendation practical and user-friendly
 - Be specific about which phishing techniques are being used (typosquatting, homograph attacks, brand impersonation, etc.)
+- Reference the multi-modal analysis components (CNN character analysis, LSTM sequential patterns, host attributes) in your assessment
 - Consider the domain age implications, SSL certificate issues, and URL obfuscation techniques
 ''';
 
@@ -42,6 +51,8 @@ Guidelines:
     required int heuristicScore,
     required String heuristicClassification,
     required String heuristicReason,
+    int featureCount = 0,
+    Map<String, double>? modalityScores,
   }) async {
     if (!AiConfig.isConfigured) {
       Logger.info(
@@ -52,16 +63,29 @@ Guidelines:
     }
 
     try {
+      final modalityContext = modalityScores != null
+          ? modalityScores.entries
+                .map(
+                  (e) => '  - ${e.key}: ${(e.value * 100).toStringAsFixed(0)}%',
+                )
+                .join('\n')
+          : 'Not available';
+
       final userPrompt =
           '''
 Analyze this URL for phishing risk:
 
 URL: $url
-Heuristic Risk Score: $heuristicScore/100
-Heuristic Classification: $heuristicClassification
-Heuristic Findings: $heuristicReason
+Multi-Modal Risk Score: $heuristicScore/100
+Classification: $heuristicClassification
+Features Analyzed: $featureCount across 5 modalities
 
-Provide your detailed security analysis in JSON format.
+Per-Modality Scores:
+$modalityContext
+
+Detection Findings: $heuristicReason
+
+Provide your detailed security analysis in JSON format, referencing the multi-modal analysis components.
 ''';
 
       final response = await http

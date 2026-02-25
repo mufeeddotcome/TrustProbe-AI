@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:trustprobe_ai/models/scan_result.dart';
-import 'package:trustprobe_ai/services/ai_service.dart';
+import '../../models/email_scan_result.dart';
+import '../../services/ai_service.dart';
 
-/// ResultCard - Displays the analysis result with animations
-class ResultCard extends StatefulWidget {
-  final ScanResult result;
+/// EmailResultCard — Displays email scan analysis results
+///
+/// Shows sender info, risk score, per-modality breakdown,
+/// detailed analysis, embedded URL analysis, and AI insights.
+class EmailResultCard extends StatefulWidget {
+  final EmailScanResult result;
 
-  const ResultCard({super.key, required this.result});
+  const EmailResultCard({super.key, required this.result});
 
   @override
-  State<ResultCard> createState() => _ResultCardState();
+  State<EmailResultCard> createState() => _EmailResultCardState();
 }
 
-class _ResultCardState extends State<ResultCard>
+class _EmailResultCardState extends State<EmailResultCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -46,13 +49,13 @@ class _ResultCardState extends State<ResultCard>
     super.dispose();
   }
 
-  Color _getRiskColor() => switch (widget.result.riskScore) {
+  Color get _riskColor => switch (widget.result.riskScore) {
     <= 30 => const Color(0xFF00d4aa),
     <= 70 => const Color(0xFFffb700),
     _ => const Color(0xFFff4757),
   };
 
-  IconData _getClassificationIcon() => switch (widget.result.classification) {
+  IconData get _classificationIcon => switch (widget.result.classification) {
     'Safe' => Icons.verified_user,
     'Suspicious' => Icons.warning_amber,
     'Malicious' => Icons.dangerous,
@@ -82,31 +85,29 @@ class _ResultCardState extends State<ResultCard>
             ),
             borderRadius: BorderRadius.circular(28),
             border: Border.all(
-              color: _getRiskColor().withValues(alpha: 0.4),
+              color: _riskColor.withValues(alpha: 0.4),
               width: 2,
             ),
             boxShadow: [
               BoxShadow(
-                color: _getRiskColor().withValues(alpha: 0.2),
+                color: _riskColor.withValues(alpha: 0.2),
                 blurRadius: 30,
-                offset: Offset(0, 15),
+                offset: const Offset(0, 15),
               ),
             ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // URL Section with gradient background
-              _buildUrlSection(),
-
+              // Email info header
+              _buildEmailHeader(),
               const SizedBox(height: 28),
 
-              // Risk Score - Prominent display
+              // Risk score with bar
               _buildRiskScore(),
-
               const SizedBox(height: 24),
 
-              // Classification Badge
+              // Classification badge
               _buildClassificationBadge(),
 
               // Multi-modal Analysis Breakdown
@@ -117,10 +118,16 @@ class _ResultCardState extends State<ResultCard>
 
               const SizedBox(height: 28),
 
-              // Detailed Explanation (Heuristic)
+              // Detailed Explanation
               _buildDetailedExplanation(),
 
-              // AI Insights Section (only if AI analysis is available)
+              // Embedded URL analysis
+              if (widget.result.embeddedUrlCount > 0) ...[
+                const SizedBox(height: 28),
+                _buildUrlAnalysisSection(),
+              ],
+
+              // AI Insights Section
               if (_aiAnalysis != null) ...[
                 const SizedBox(height: 28),
                 _buildAiInsightsSection(_aiAnalysis!),
@@ -132,56 +139,122 @@ class _ResultCardState extends State<ResultCard>
     );
   }
 
-  Widget _buildUrlSection() {
+  Widget _buildEmailHeader() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            _getRiskColor().withValues(alpha: 0.15),
-            _getRiskColor().withValues(alpha: 0.05),
+            _riskColor.withValues(alpha: 0.15),
+            _riskColor.withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _getRiskColor().withValues(alpha: 0.3)),
+        border: Border.all(color: _riskColor.withValues(alpha: 0.3)),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: _getRiskColor().withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(Icons.link, color: _getRiskColor(), size: 24),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: _riskColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(Icons.email, color: _riskColor, size: 24),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Analyzed Email',
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: Colors.white60,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    if (widget.result.senderEmail != null)
+                      Text(
+                        widget.result.senderEmail!,
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
+          if (widget.result.subject != null &&
+              widget.result.subject!.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Analyzed URL',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: Colors.white60,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.5,
+                SizedBox(
+                  width: 65,
+                  child: Text(
+                    'Subject',
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  widget.result.url,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Text(
+                    widget.result.subject!,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
+          ],
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 65,
+                child: Text(
+                  'URLs',
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: Colors.white.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Text(
+                '${widget.result.embeddedUrlCount} found',
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: widget.result.embeddedUrlCount > 0
+                      ? _riskColor
+                      : Colors.white.withValues(alpha: 0.9),
+                  fontWeight: widget.result.embeddedUrlCount > 0
+                      ? FontWeight.w600
+                      : FontWeight.w400,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -206,17 +279,15 @@ class _ResultCardState extends State<ResultCard>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: _getRiskColor().withValues(alpha: 0.2),
+                color: _riskColor.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: _getRiskColor().withValues(alpha: 0.5),
-                ),
+                border: Border.all(color: _riskColor.withValues(alpha: 0.5)),
               ),
               child: Text(
                 widget.result.riskLevel,
                 style: GoogleFonts.inter(
                   fontSize: 12,
-                  color: _getRiskColor(),
+                  color: _riskColor,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
                 ),
@@ -226,7 +297,7 @@ class _ResultCardState extends State<ResultCard>
         ),
         const SizedBox(height: 16),
 
-        // Progress bar with animation
+        // Progress bar
         Container(
           height: 16,
           decoration: BoxDecoration(
@@ -239,15 +310,12 @@ class _ResultCardState extends State<ResultCard>
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    _getRiskColor().withValues(alpha: 0.7),
-                    _getRiskColor(),
-                  ],
+                  colors: [_riskColor.withValues(alpha: 0.7), _riskColor],
                 ),
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
-                    color: _getRiskColor().withValues(alpha: 0.5),
+                    color: _riskColor.withValues(alpha: 0.5),
                     blurRadius: 10,
                   ),
                 ],
@@ -263,7 +331,7 @@ class _ResultCardState extends State<ResultCard>
               '${widget.result.riskScore}%',
               style: GoogleFonts.poppins(
                 fontSize: 36,
-                color: _getRiskColor(),
+                color: _riskColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -285,10 +353,10 @@ class _ResultCardState extends State<ResultCard>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: _getRiskColor().withValues(alpha: 0.15),
+        color: _riskColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _getRiskColor().withValues(alpha: 0.3),
+          color: _riskColor.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -297,14 +365,10 @@ class _ResultCardState extends State<ResultCard>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: _getRiskColor().withValues(alpha: 0.2),
+              color: _riskColor.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              _getClassificationIcon(),
-              color: _getRiskColor(),
-              size: 32,
-            ),
+            child: Icon(_classificationIcon, color: _riskColor, size: 32),
           ),
           const SizedBox(width: 16),
           Column(
@@ -323,7 +387,7 @@ class _ResultCardState extends State<ResultCard>
                 widget.result.classification.toUpperCase(),
                 style: GoogleFonts.poppins(
                   fontSize: 24,
-                  color: _getRiskColor(),
+                  color: _riskColor,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1,
                 ),
@@ -339,13 +403,11 @@ class _ResultCardState extends State<ResultCard>
     final modalities = widget.result.modalityScores;
     final explanations = widget.result.modalityExplanations;
 
-    // Icons for each modality
     IconData getModalityIcon(String name) => switch (name) {
-      'CNN Character Analysis' => Icons.text_fields,
-      'LSTM Sequential Analysis' => Icons.timeline,
-      'Host & Domain Analysis' => Icons.dns,
-      'SSL/Security Analysis' => Icons.lock,
-      'Content Analysis' => Icons.article,
+      'Header Analysis' => Icons.mail_outline,
+      'Content Analysis' => Icons.text_snippet_outlined,
+      'URL Analysis' => Icons.link,
+      'Metadata Analysis' => Icons.settings_ethernet,
       _ => Icons.analytics,
     };
 
@@ -362,13 +424,13 @@ class _ResultCardState extends State<ResultCard>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF0ea5e9).withValues(alpha: 0.12),
-            Color(0xFF6366f1).withValues(alpha: 0.06),
+            const Color(0xFF0ea5e9).withValues(alpha: 0.12),
+            const Color(0xFF6366f1).withValues(alpha: 0.06),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Color(0xFF0ea5e9).withValues(alpha: 0.3),
+          color: const Color(0xFF0ea5e9).withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -381,18 +443,18 @@ class _ResultCardState extends State<ResultCard>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [Color(0xFF0ea5e9), Color(0xFF6366f1)],
                   ),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0xFF0ea5e9).withValues(alpha: 0.4),
+                      color: const Color(0xFF0ea5e9).withValues(alpha: 0.4),
                       blurRadius: 12,
                     ),
                   ],
                 ),
-                child: Icon(Icons.hub, color: Colors.white, size: 20),
+                child: const Icon(Icons.hub, color: Colors.white, size: 20),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -405,7 +467,6 @@ class _ResultCardState extends State<ResultCard>
                   ),
                 ),
               ),
-              // Feature count badge
               if (widget.result.featureCount > 0)
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -413,17 +474,17 @@ class _ResultCardState extends State<ResultCard>
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Color(0xFF0ea5e9).withValues(alpha: 0.2),
+                    color: const Color(0xFF0ea5e9).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Color(0xFF0ea5e9).withValues(alpha: 0.4),
+                      color: const Color(0xFF0ea5e9).withValues(alpha: 0.4),
                     ),
                   ),
                   child: Text(
                     '${widget.result.featureCount} Features',
                     style: GoogleFonts.inter(
                       fontSize: 10,
-                      color: Color(0xFF0ea5e9),
+                      color: const Color(0xFF0ea5e9),
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.5,
                     ),
@@ -496,7 +557,7 @@ class _ResultCardState extends State<ResultCard>
                       ),
                     ),
                   ),
-                  // Explanation (if available)
+                  // Explanation
                   if (explanation != null && explanation.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 4, left: 24),
@@ -516,7 +577,7 @@ class _ResultCardState extends State<ResultCard>
             );
           }),
 
-          // Modality info footer
+          // Footer
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -528,7 +589,7 @@ class _ResultCardState extends State<ResultCard>
               ),
               const SizedBox(width: 6),
               Text(
-                'CNN + LSTM + Host/Domain + SSL + Content Analysis',
+                'Header + Content + URL + Metadata Analysis',
                 style: GoogleFonts.inter(
                   fontSize: 10,
                   color: Colors.white.withValues(alpha: 0.35),
@@ -544,9 +605,7 @@ class _ResultCardState extends State<ResultCard>
   }
 
   Widget _buildDetailedExplanation() {
-    // Parse the reason to extract individual factors
     final reasons = widget.result.reason.split('. ');
-    final breakdown = widget.result.scoreBreakdown;
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -560,7 +619,7 @@ class _ResultCardState extends State<ResultCard>
         children: [
           Row(
             children: [
-              Icon(Icons.description, color: Color(0xFF00f2fe), size: 22),
+              const Icon(Icons.description, color: Color(0xFF00f2fe), size: 22),
               const SizedBox(width: 10),
               Text(
                 'Detailed Analysis',
@@ -586,7 +645,7 @@ class _ResultCardState extends State<ResultCard>
                     child: Container(
                       width: 6,
                       height: 6,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Color(0xFF00f2fe),
                         shape: BoxShape.circle,
                       ),
@@ -613,9 +672,9 @@ class _ResultCardState extends State<ResultCard>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _getRiskColor().withValues(alpha: 0.1),
+              color: _riskColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: _getRiskColor().withValues(alpha: 0.2)),
+              border: Border.all(color: _riskColor.withValues(alpha: 0.2)),
             ),
             child: Row(
               children: [
@@ -623,7 +682,7 @@ class _ResultCardState extends State<ResultCard>
                   widget.result.classification == 'Safe'
                       ? Icons.check_circle_outline
                       : Icons.info_outline,
-                  color: _getRiskColor(),
+                  color: _riskColor,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
@@ -640,31 +699,155 @@ class _ResultCardState extends State<ResultCard>
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
 
-          // Score Breakdown Dropdown
-          if (breakdown.isNotEmpty) ...[
-            const SizedBox(height: 20),
-            _buildScoreBreakdownDropdown(breakdown),
+  String _getRecommendation() => switch (widget.result.classification) {
+    'Safe' => '✓ This email appears safe based on our multi-modal analysis.',
+    'Suspicious' =>
+      '⚠ Exercise caution. This email shows suspicious characteristics that may indicate phishing.',
+    'Malicious' =>
+      '⛔ Do not click any links in this email. High likelihood of phishing or scam content.',
+    _ => 'Unable to determine safety level.',
+  };
+
+  Widget _buildUrlAnalysisSection() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFfeca57).withValues(alpha: 0.12),
+            const Color(0xFFff6b6b).withValues(alpha: 0.06),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFfeca57).withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFfeca57), Color(0xFFff6b6b)],
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFfeca57).withValues(alpha: 0.4),
+                      blurRadius: 12,
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.link, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Embedded URL Analysis',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFfeca57).withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFFfeca57).withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Text(
+                  '${widget.result.embeddedUrlCount} URLs',
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    color: const Color(0xFFfeca57),
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '${widget.result.embeddedUrlCount} URL(s) were found and analyzed inside this email.',
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              color: Colors.white.withValues(alpha: 0.7),
+              height: 1.4,
+            ),
+          ),
+          if (widget.result.highestRiskUrl != null) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.warning_amber,
+                    color: Color(0xFFff4757),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Highest Risk URL — ${widget.result.highestRiskUrlScore}% Risk',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: const Color(0xFFff4757),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.result.highestRiskUrl!,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: Colors.white.withValues(alpha: 0.6),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ],
       ),
     );
   }
 
-  /// Expandable dropdown showing each analysis check and its score
-  Widget _buildScoreBreakdownDropdown(Map<String, int> breakdown) =>
-      _ScoreBreakdownDropdown(breakdown: breakdown, riskColor: _getRiskColor());
-
-  String _getRecommendation() => switch (widget.result.classification) {
-    'Safe' => '✓ This URL appears safe to visit based on our analysis.',
-    'Suspicious' =>
-      '⚠ Exercise caution. This URL shows some suspicious characteristics.',
-    'Malicious' =>
-      '⛔ Do not visit this URL. High likelihood of phishing or malicious content.',
-    _ => 'Unable to determine safety level.',
-  };
-
-  /// Build the AI Insights section with LLM-generated analysis
   Widget _buildAiInsightsSection(AiAnalysisResult aiResult) {
     return Container(
       padding: const EdgeInsets.all(24),
@@ -673,13 +856,13 @@ class _ResultCardState extends State<ResultCard>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF7c3aed).withValues(alpha: 0.15),
-            Color(0xFF2563eb).withValues(alpha: 0.08),
+            const Color(0xFF7c3aed).withValues(alpha: 0.15),
+            const Color(0xFF2563eb).withValues(alpha: 0.08),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Color(0xFF7c3aed).withValues(alpha: 0.3),
+          color: const Color(0xFF7c3aed).withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -692,18 +875,22 @@ class _ResultCardState extends State<ResultCard>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [Color(0xFF7c3aed), Color(0xFF2563eb)],
                   ),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0xFF7c3aed).withValues(alpha: 0.4),
+                      color: const Color(0xFF7c3aed).withValues(alpha: 0.4),
                       blurRadius: 12,
                     ),
                   ],
                 ),
-                child: Icon(Icons.auto_awesome, color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.auto_awesome,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -790,10 +977,10 @@ class _ResultCardState extends State<ResultCard>
                       margin: const EdgeInsets.only(top: 4),
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Color(0xFF7c3aed).withValues(alpha: 0.3),
+                        color: const Color(0xFF7c3aed).withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_forward_ios,
                         color: Color(0xFFa78bfa),
                         size: 10,
@@ -823,17 +1010,17 @@ class _ResultCardState extends State<ResultCard>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  _getRiskColor().withValues(alpha: 0.15),
-                  _getRiskColor().withValues(alpha: 0.05),
+                  _riskColor.withValues(alpha: 0.15),
+                  _riskColor.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: _getRiskColor().withValues(alpha: 0.3)),
+              border: Border.all(color: _riskColor.withValues(alpha: 0.3)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   Icons.lightbulb_outline,
                   color: Color(0xFFfbbf24),
                   size: 20,
@@ -862,7 +1049,7 @@ class _ResultCardState extends State<ResultCard>
             children: [
               Icon(
                 Icons.auto_awesome,
-                color: Color(0xFF7c3aed).withValues(alpha: 0.5),
+                color: const Color(0xFF7c3aed).withValues(alpha: 0.5),
                 size: 14,
               ),
               const SizedBox(width: 6),
@@ -888,240 +1075,4 @@ class _ResultCardState extends State<ResultCard>
     'low' => const Color(0xFFff4757),
     _ => const Color(0xFFffb700),
   };
-}
-
-/// Expandable dropdown widget that shows individual analysis scores
-class _ScoreBreakdownDropdown extends StatefulWidget {
-  final Map<String, int> breakdown;
-  final Color riskColor;
-
-  const _ScoreBreakdownDropdown({
-    required this.breakdown,
-    required this.riskColor,
-  });
-
-  @override
-  State<_ScoreBreakdownDropdown> createState() =>
-      _ScoreBreakdownDropdownState();
-}
-
-class _ScoreBreakdownDropdownState extends State<_ScoreBreakdownDropdown>
-    with SingleTickerProviderStateMixin {
-  bool _isExpanded = false;
-  late AnimationController _expandController;
-  late Animation<double> _expandAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _expandController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _expandAnimation = CurvedAnimation(
-      parent: _expandController,
-      curve: Curves.easeInOut,
-    );
-  }
-
-  @override
-  void dispose() {
-    _expandController.dispose();
-    super.dispose();
-  }
-
-  void _toggleExpand() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-      if (_isExpanded) {
-        _expandController.forward();
-      } else {
-        _expandController.reverse();
-      }
-    });
-  }
-
-  Color _getScoreColor(int score) => switch (score) {
-    < 0 => const Color(0xFF00d4aa),
-    0 => const Color(0xFF00d4aa),
-    <= 20 => const Color(0xFFffb700),
-    _ => const Color(0xFFff4757),
-  };
-
-  IconData _getScoreIcon(int score) =>
-      score <= 0 ? Icons.check_circle : Icons.warning_amber_rounded;
-
-  @override
-  Widget build(BuildContext context) {
-    // Sort: flagged checks first (score > 0), then passed checks
-    final sortedEntries = widget.breakdown.entries.toList()
-      ..sort((a, b) {
-        if (a.value > 0 && b.value <= 0) return -1;
-        if (a.value <= 0 && b.value > 0) return 1;
-        return b.value.compareTo(a.value);
-      });
-
-    final flaggedCount = sortedEntries.where((e) => e.value > 0).length;
-
-    return Column(
-      children: [
-        // Expandable Header
-        InkWell(
-          onTap: _toggleExpand,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF00f2fe).withValues(alpha: 0.08),
-                  Color(0xFF4facfe).withValues(alpha: 0.05),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Color(0xFF00f2fe).withValues(alpha: 0.2),
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.analytics_outlined,
-                  color: Color(0xFF00f2fe),
-                  size: 20,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    'Score Breakdown',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                // Flagged count badge
-                if (flaggedCount > 0) ...[
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color(0xFFff4757).withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      '$flaggedCount flagged',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: Color(0xFFff4757),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-                AnimatedRotation(
-                  turns: _isExpanded ? 0.5 : 0.0,
-                  duration: const Duration(milliseconds: 300),
-                  child: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.white.withValues(alpha: 0.7),
-                    size: 22,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Expandable Content
-        SizeTransition(
-          sizeFactor: _expandAnimation,
-          child: Container(
-            margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.02),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
-            ),
-            child: Column(
-              children: sortedEntries.map((entry) {
-                final name = entry.key;
-                final score = entry.value;
-
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.05),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      // Pass/Fail icon
-                      Icon(
-                        _getScoreIcon(score),
-                        color: _getScoreColor(score),
-                        size: 18,
-                      ),
-                      const SizedBox(width: 12),
-                      // Check name
-                      Expanded(
-                        child: Text(
-                          name,
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: Colors.white.withValues(alpha: 0.85),
-                            fontWeight: score > 0
-                                ? FontWeight.w600
-                                : FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                      // Score badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getScoreColor(score).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: _getScoreColor(score).withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Text(
-                          score < 0
-                              ? '$score pts'
-                              : score == 0
-                              ? 'Pass'
-                              : '+$score pts',
-                          style: GoogleFonts.inter(
-                            fontSize: 11,
-                            color: _getScoreColor(score),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

@@ -1,26 +1,56 @@
+import 'package:flutter/material.dart';
 import 'package:inline_logger/inline_logger.dart';
 
 import 'package:stacked/stacked.dart';
 import 'package:trustprobe_ai/app/app.locator.dart';
 import 'package:trustprobe_ai/services/device_id_service.dart';
 import 'package:trustprobe_ai/services/phishing_service.dart';
+import 'package:trustprobe_ai/services/email_phishing_service.dart';
 import 'package:trustprobe_ai/services/firestore_service.dart';
 import 'package:trustprobe_ai/models/scan_result.dart';
+import 'package:trustprobe_ai/models/email_scan_result.dart';
 
 /// HomeViewModel - Business logic for the home screen
 ///
-/// Manages URL analysis, state, and Firestore operations
+/// Manages URL and email analysis, tab state, and Firestore operations
 class HomeViewModel extends BaseViewModel {
   final _phishingService = locator<PhishingService>();
+  final _emailPhishingService = locator<EmailPhishingService>();
   final _firestoreService = locator<FirestoreService>();
   final _deviceIdService = locator<DeviceIdService>();
 
-  // State variables
+  // ──── Tab state ────
+  int _selectedTab = 0;
+  int get selectedTab => _selectedTab;
+
+  // ──── TextField controllers ────
+  final urlController = TextEditingController();
+  final emailController = TextEditingController();
+
+  void setSelectedTab(int index) {
+    _selectedTab = index;
+    // Clear both controllers to avoid stale text
+    urlController.clear();
+    emailController.clear();
+    _urlInput = '';
+    _emailInput = '';
+    _errorMessage = null;
+    _emailErrorMessage = null;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    urlController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
+
+  // ──── URL Scan state ────
   String _urlInput = '';
   ScanResult? _currentResult;
   String? _errorMessage;
 
-  // Getters
   String get urlInput => _urlInput;
   ScanResult? get currentResult => _currentResult;
   String? get errorMessage => _errorMessage;
@@ -28,53 +58,38 @@ class HomeViewModel extends BaseViewModel {
   @override
   bool get hasError => _errorMessage != null;
 
-  /// Stream of previous scan results from Firestore, cached to avoid
-  /// recreating on every rebuild (which causes the loading spinner to flash)
   late final Stream<List<ScanResult>> previousScans = _firestoreService
       .getPreviousScans(deviceId: _deviceIdService.deviceId);
 
-  /// Update URL input
   void updateUrlInput(String value) {
     _urlInput = value;
     _errorMessage = null;
     notifyListeners();
   }
 
-  /// Analyze the entered URL
   Future<void> analyzeUrl() async {
-    // Clear previous results and errors
     _currentResult = null;
     _errorMessage = null;
 
-    // Validate input
     if (_urlInput.trim().isEmpty) {
       _errorMessage = 'Please enter a URL to analyze';
       notifyListeners();
       return;
     }
 
-    // Set loading state
     setBusy(true);
     notifyListeners();
 
     try {
-      // Analyze URL using PhishingService
       final result = await _phishingService.analyzeUrl(_urlInput);
-
-      // Attach device ID and update current result
       _currentResult = result.copyWith(deviceId: _deviceIdService.deviceId);
 
-      // Save to Firestore (non-blocking, with timeout)
-      // Don't await - let it save in background
       _firestoreService
           .saveScanResult(_currentResult!)
           .timeout(
             const Duration(seconds: 2),
             onTimeout: () {
-              Logger.warning(
-                'Firestore save timed out - Firebase may not be configured',
-                'HomeViewModel',
-              );
+              Logger.warning('Firestore save timed out', 'HomeViewModel');
             },
           )
           .catchError((error) {
@@ -91,7 +106,6 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  /// Clear current result and reset form
   void clearResult() {
     _currentResult = null;
     _urlInput = '';
@@ -99,11 +113,73 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  /// Show a previous scan result (when clicked from history)
   void showPreviousScan(ScanResult result) {
     _currentResult = result;
     _urlInput = result.url;
     _errorMessage = null;
+    notifyListeners();
+  }
+
+  // ──── Email Scan state ────
+  String _emailInput = '';
+  EmailScanResult? _currentEmailResult;
+  String? _emailErrorMessage;
+
+  String get emailInput => _emailInput;
+  EmailScanResult? get currentEmailResult => _currentEmailResult;
+  String? get emailErrorMessage => _emailErrorMessage;
+  bool get hasEmailResult => _currentEmailResult != null;
+  bool get hasEmailError => _emailErrorMessage != null;
+
+  // No email history — emails are never saved (privacy)
+
+  void updateEmailInput(String value) {
+    _emailInput = value;
+    _emailErrorMessage = null;
+    notifyListeners();
+  }
+
+  Future<void> analyzeEmail() async {
+    _currentEmailResult = null;
+    _emailErrorMessage = null;
+
+    if (_emailInput.trim().isEmpty) {
+      _emailErrorMessage = 'Please paste email content to analyze';
+      notifyListeners();
+      return;
+    }
+
+    setBusy(true);
+    notifyListeners();
+
+    try {
+      final result = await _emailPhishingService.analyzeEmail(_emailInput);
+      _currentEmailResult = result.copyWith(
+        deviceId: _deviceIdService.deviceId,
+      );
+
+      // Emails are NOT saved to Firestore — privacy first
+
+      _emailErrorMessage = null;
+    } catch (e) {
+      _emailErrorMessage = 'Failed to analyze email: ${e.toString()}';
+      _currentEmailResult = null;
+    } finally {
+      setBusy(false);
+      notifyListeners();
+    }
+  }
+
+  void clearEmailResult() {
+    _currentEmailResult = null;
+    _emailInput = '';
+    _emailErrorMessage = null;
+    notifyListeners();
+  }
+
+  void showPreviousEmailScan(EmailScanResult result) {
+    _currentEmailResult = result;
+    _emailErrorMessage = null;
     notifyListeners();
   }
 }

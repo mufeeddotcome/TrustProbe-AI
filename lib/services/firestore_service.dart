@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:inline_logger/inline_logger.dart';
 
 import '../models/scan_result.dart';
+import '../models/email_scan_result.dart';
 
 /// FirestoreService - Manages Firebase Firestore operations
 ///
@@ -48,6 +49,52 @@ class FirestoreService {
           );
     } catch (e) {
       Logger.error('Error setting up Firestore stream: $e', 'FirestoreService');
+      return Stream.value([]);
+    }
+  }
+
+  // ──── Email Scans ────
+
+  static const _emailCollectionName = 'email_scans';
+
+  /// Save an email scan result to Firestore
+  Future<void> saveEmailScanResult(EmailScanResult result) async {
+    try {
+      await _firestore.collection(_emailCollectionName).add(result.toMap());
+    } catch (e) {
+      Logger.error('Error saving email scan: $e', 'FirestoreService');
+    }
+  }
+
+  /// Get previous email scan results as a stream
+  Stream<List<EmailScanResult>> getPreviousEmailScans({
+    required String deviceId,
+    int limit = 50,
+  }) {
+    try {
+      return _firestore
+          .collection(_emailCollectionName)
+          .where('deviceId', isEqualTo: deviceId)
+          .orderBy('timestamp', descending: true)
+          .limit(limit)
+          .snapshots()
+          .timeout(
+            const Duration(seconds: 3),
+            onTimeout: (sink) => sink.close(),
+          )
+          .handleError((error) {
+            Logger.error('Email scan stream error: $error', 'FirestoreService');
+          })
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => EmailScanResult.fromFirestore(doc.data()))
+                .toList(),
+          );
+    } catch (e) {
+      Logger.error(
+        'Error setting up email scan stream: $e',
+        'FirestoreService',
+      );
       return Stream.value([]);
     }
   }

@@ -8,6 +8,15 @@ class ScanResult {
   final String? deviceId;
   final Map<String, int> scoreBreakdown;
 
+  /// Per-modality risk scores (0-100) from multi-modal analysis
+  final Map<String, double> modalityScores;
+
+  /// Per-modality human-readable explanations
+  final Map<String, String> modalityExplanations;
+
+  /// Total number of features extracted across all modalities
+  final int featureCount;
+
   const ScanResult({
     required this.url,
     required this.riskScore,
@@ -17,6 +26,9 @@ class ScanResult {
     this.aiAnalysis,
     this.deviceId,
     this.scoreBreakdown = const {},
+    this.modalityScores = const {},
+    this.modalityExplanations = const {},
+    this.featureCount = 0,
   });
 
   /// Create a copy with optional field overrides
@@ -29,6 +41,9 @@ class ScanResult {
     String? aiAnalysis,
     String? deviceId,
     Map<String, int>? scoreBreakdown,
+    Map<String, double>? modalityScores,
+    Map<String, String>? modalityExplanations,
+    int? featureCount,
   }) => ScanResult(
     url: url ?? this.url,
     riskScore: riskScore ?? this.riskScore,
@@ -38,6 +53,9 @@ class ScanResult {
     aiAnalysis: aiAnalysis ?? this.aiAnalysis,
     deviceId: deviceId ?? this.deviceId,
     scoreBreakdown: scoreBreakdown ?? this.scoreBreakdown,
+    modalityScores: modalityScores ?? this.modalityScores,
+    modalityExplanations: modalityExplanations ?? this.modalityExplanations,
+    featureCount: featureCount ?? this.featureCount,
   );
 
   /// Create ScanResult from Firestore DocumentSnapshot
@@ -54,6 +72,17 @@ class ScanResult {
           (k, v) => MapEntry(k, v as int),
         ) ??
         {},
+    modalityScores:
+        (data['modalityScores'] as Map<String, dynamic>?)?.map(
+          (k, v) => MapEntry(k, (v as num).toDouble()),
+        ) ??
+        {},
+    modalityExplanations:
+        (data['modalityExplanations'] as Map<String, dynamic>?)?.map(
+          (k, v) => MapEntry(k, v as String),
+        ) ??
+        {},
+    featureCount: data['featureCount'] as int? ?? 0,
   );
 
   /// Convert ScanResult to Map for Firestore
@@ -66,23 +95,30 @@ class ScanResult {
     if (aiAnalysis != null) 'aiAnalysis': aiAnalysis,
     if (deviceId != null) 'deviceId': deviceId,
     if (scoreBreakdown.isNotEmpty) 'scoreBreakdown': scoreBreakdown,
+    if (modalityScores.isNotEmpty) 'modalityScores': modalityScores,
+    if (modalityExplanations.isNotEmpty)
+      'modalityExplanations': modalityExplanations,
+    if (featureCount > 0) 'featureCount': featureCount,
   };
 
   /// Get color based on risk score
   String get riskColor => switch (riskScore) {
     <= 30 => 'green',
-    <= 70 => 'yellow',
+    <= 60 => 'yellow',
     _ => 'red',
   };
 
   /// Get risk level label
   String get riskLevel => switch (riskScore) {
     <= 30 => 'Low Risk',
-    <= 70 => 'Medium Risk',
+    <= 60 => 'Medium Risk',
     _ => 'High Risk',
   };
 
+  /// Whether multi-modal analysis data is available
+  bool get hasMultiModalData => modalityScores.isNotEmpty;
+
   @override
   String toString() =>
-      'ScanResult(url: $url, riskScore: $riskScore, classification: $classification)';
+      'ScanResult(url: $url, riskScore: $riskScore, classification: $classification, features: $featureCount)';
 }

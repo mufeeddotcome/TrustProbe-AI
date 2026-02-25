@@ -1,93 +1,120 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/TrustProbe_AI-Phishing_Detection-00d2ff?style=for-the-badge&logo=shield&logoColor=white" alt="TrustProbe AI" />
+  <img src="https://img.shields.io/badge/Flutter-3.10+-02569B?style=for-the-badge&logo=flutter" alt="Flutter 3.10+"/>
+  <img src="https://img.shields.io/badge/Dart-3.0+-0175C2?style=for-the-badge&logo=dart" alt="Dart 3.0+"/>
+  <img src="https://img.shields.io/badge/AI-Llama%203.3%2070B-FF6F00?style=for-the-badge" alt="Llama 3.3"/>
+  <img src="https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=for-the-badge&logo=firebase" alt="Firebase"/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License"/>
 </p>
 
 <h1 align="center">🛡️ TrustProbe AI</h1>
 
 <p align="center">
-  <strong>AI-Powered Phishing URL Risk Analyzer</strong><br/>
-  Protect yourself from phishing attacks with real-time, intelligent URL analysis
+  <strong>Multi-Modal AI Phishing Detection Platform</strong><br/>
+  <em>Research-grade URL & email analysis with 55+ features across 5 detection modalities</em>
 </p>
 
 <p align="center">
-  <a href="#features"><img src="https://img.shields.io/badge/Features-12+-00d2ff?style=flat-square" alt="Features" /></a>
-  <img src="https://img.shields.io/badge/Flutter-3.x-02569B?style=flat-square&logo=flutter&logoColor=white" alt="Flutter" />
-  <img src="https://img.shields.io/badge/Dart-3.10+-0175C2?style=flat-square&logo=dart&logoColor=white" alt="Dart" />
-  <img src="https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase" />
-  <img src="https://img.shields.io/badge/AI-Llama_3.3_70B-8B5CF6?style=flat-square&logo=meta&logoColor=white" alt="AI Model" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
-  <img src="https://img.shields.io/badge/Platform-Web-FF6F00?style=flat-square" alt="Platform" />
+  <a href="https://akshaychandt.github.io/TrustProbe-AI/">🌐 Live Demo</a> •
+  <a href="DOCUMENTATION.md">📖 Full Documentation</a> •
+  <a href="#-quick-start">🚀 Quick Start</a>
 </p>
-
----
-
-## 📖 Overview
-
-**TrustProbe AI** is a modern Flutter Web application that analyzes URLs for phishing risks using a **hybrid detection engine** — combining rule-based heuristic analysis with AI-powered threat intelligence from **Llama 3.3 70B** (via Groq API).
-
-Enter any URL and get an instant risk assessment with a detailed breakdown of why a URL is classified as **Safe**, **Suspicious**, or **Malicious**, along with actionable recommendations.
 
 ---
 
 ## ✨ Features
 
+### URL Analysis
+
 | Feature | Description |
 |---------|-------------|
-| 🔍 **Real-time URL Analysis** | Instant phishing risk detection with detailed score breakdown |
-| 🤖 **AI-Powered Threat Intelligence** | Llama 3.3 70B provides in-depth security analysis beyond rule-based checks |
-| 📊 **Risk Scoring (0–100%)** | Continuous risk score with color-coded indicators (Green/Yellow/Red) |
-| 🏷️ **Smart Classification** | Clear **Safe** / **Suspicious** / **Malicious** categorization |
-| 📝 **Human-Readable Explanations** | Detailed reasoning for every classification decision |
-| 🧮 **Score Breakdown** | Transparent breakdown showing exactly which checks contributed to the score |
-| 📚 **Search History** | Per-device scan history stored and streamed in real-time from Firebase Firestore |
-| 🎨 **Modern UI/UX** | Dark theme with gradient backgrounds, glassmorphism effects, and smooth animations |
-| 📱 **Fully Responsive** | Optimized for desktop, tablet, and mobile viewports |
-| � **Brand Impersonation Detection** | Identifies domains mimicking trusted brands |
-| 🌐 **URL Shortener Detection** | Flags shortened URLs that may hide malicious destinations |
-| ⚡ **Graceful Degradation** | Works without AI/Firebase — core heuristic engine runs independently |
+| 🧠 **Multi-Modal Detection** | 5-modality engine: CNN-equivalent URL features, LSTM-equivalent sequential patterns, host/domain analysis, SSL/security checks, content analysis |
+| 🤖 **AI Threat Narrative** | Llama 3.3 70B (open-source) via Groq API provides context-aware threat summaries with per-modality reasoning |
+| 📊 **55+ Feature Extraction** | Character entropy, bigram analysis, TLD reputation scores, brand impersonation confidence, domain age heuristics, and more |
+| 🏷️ **Smart Classification** | Safe / Suspicious / Malicious with transparent per-modality score breakdown |
+| 📝 **Human-Readable Explanations** | Detailed reasoning referencing CNN, LSTM, and host analysis findings |
+| 📈 **Benchmark Suite** | 170+ URL dataset (PhishTank, OpenPhish, Alexa Top Sites) with accuracy, precision, recall, F1 metrics |
+
+### Email Analysis
+
+| Feature | Description |
+|---------|-------------|
+| 📧 **Email Phishing Detection** | Multi-modal email analysis with header, content, embedded URL, and metadata modalities |
+| 🔍 **Header Analysis** | Sender domain reputation, reply-to mismatch, display name impersonation, spoofing detection |
+| 📝 **Content Analysis** | Urgency language detection, credential requests, social engineering, financial lures, threat language |
+| 🔗 **Embedded URL Scanning** | Every link in an email is analyzed through the full URL multi-modal engine |
+
+### Platform
+
+| Feature | Description |
+|---------|-------------|
+| 📚 **Per-Device History** | Scan history stored in Firebase Firestore, scoped by anonymous device ID |
+| 🎨 **Modern UI/UX** | Dark theme with glassmorphism, gradient backgrounds, smooth animations |
+| 📱 **Fully Responsive** | Optimized for desktop, tablet, and mobile |
 
 ---
 
 ## 🏗️ Architecture
 
-TrustProbe AI follows the **Stacked MVVM (Model-View-ViewModel)** architecture pattern with clean separation of concerns:
+TrustProbe AI follows **Stacked MVVM** with a multi-modal service architecture:
 
 ```
-+--------------------------------------------------------------+
-|                         UI Layer                             |
-|  +-----------+   +------------+   +-----------------+        |
-|  | HomeView  |   | ResultCard |   | HistoryTable    |        |
-|  +-----+-----+   +-----+------+   +-------+---------+       |
-|        |               |                  |                  |
-|        +---------------+------------------+                  |
-|                        |                                     |
-+------------------------+------------------------------------+
-|                    ViewModel Layer                            |
-|               +--------------------+                         |
-|               |   HomeViewModel    |                         |
-|               |  (State + Logic)   |                         |
-|               +--------+-----------+                         |
-|                        |                                     |
-+------------------------+------------------------------------+
-|                     Service Layer                             |
-|  +-----------+  +-------------+  +----------+  +-----------+ |
-|  | AiService |  | PhishingSvc |  | Firestore|  | DeviceId  | |
-|  |(Llama 3.3)|  | (Heuristics)|  |  Service |  |  Service  | |
-|  +-----------+  +-------------+  +----------+  +-----------+ |
-+--------------------------------------------------------------+
++------------------------------------------------------------------+
+|                           UI Layer                                |
+|  +-----------+ +------------+ +--------------+ +----------------+ |
+|  | HomeView  | | ResultCard | | HistoryTable | | EmailResult    | |
+|  +-----+-----+ +-----+------+ +------+------+ +-------+--------+ |
+|        |              |               |                |          |
++--------+--------------+---------------+----------------+----------+
+|                       ViewModel Layer                             |
+|                  +--------------------+                           |
+|                  |   HomeViewModel    |                           |
+|                  +--------+-----------+                           |
+|                           |                                       |
++---------------------------+---------------------------------------+
+|                        Service Layer                              |
+|  +------------------+  +-------------------+  +-----------------+ |
+|  | PhishingService  |  | EmailPhishingSvc  |  | BenchmarkSvc    | |
+|  +--------+---------+  +--------+----------+  +-------+---------+ |
+|           |                      |                     |          |
+|  +--------v---------+  +--------v----------+           |          |
+|  | MultiModalEngine |  | EmailMultiModal   |           |          |
+|  |  (URL Analysis)  |  |  (Email Analysis) |           |          |
+|  +--+--+--+--+--+---+  +--+--+--+--+------+           |          |
+|     |  |  |  |  |          |  |  |  |                  |          |
+|     v  v  v  v  v          v  v  v  v                  |          |
+|  [URL] [Seq] [Host]    [Header] [Content]              |          |
+|  [SSL] [Content]       [URL]    [Metadata]             |          |
+|                                                        |          |
+|  +-----------+  +----------+  +-----------+            |          |
+|  | AiService |  | Firestore|  | DeviceId  |            |          |
+|  |(Llama 3.3)|  |  Service |  |  Service  |            |          |
+|  +-----------+  +----------+  +-----------+            |          |
++------------------------------------------------------------------+
 ```
 
 ### Layer Responsibilities
 
 | Layer | Component | Responsibility |
 |-------|-----------|----------------|
-| **View** | `HomeView`, `ResultCard`, `SearchHistoryTable` | Pure UI rendering — no business logic |
-| **ViewModel** | `HomeViewModel` | State management, orchestrates services, handles user interactions |
-| **Service** | `PhishingService` | Core phishing detection engine (heuristic + AI) |
+| **View** | `HomeView`, `ResultCard`, `EmailResultCard`, `SearchHistoryTable` | Pure UI rendering — no business logic |
+| **ViewModel** | `HomeViewModel` | State management, orchestrates URL and email services |
+| **Service** | `PhishingService` → `MultiModalEngine` | URL phishing detection via 5-modality engine |
+| **Service** | `EmailPhishingService` → `EmailMultiModalEngine` | Email phishing detection via 4-modality engine |
+| **Service** | `UrlFeatureExtractor` | CNN-equivalent: 25+ character-level URL features |
+| **Service** | `SequentialAnalyzer` | LSTM-equivalent: 8 sequential pattern features |
+| **Service** | `HostAnalysisService` | Domain reputation, brand impersonation, TLD scoring |
+| **Service** | `SslAnalysisService` | HTTPS, certificate, redirect, mixed content checks |
+| **Service** | `ContentAnalysisService` | Login page, download, data exfiltration detection |
+| **Service** | `EmailParser` | Email header/body parsing, URL extraction |
+| **Service** | `EmailHeaderAnalyzer` | Sender reputation, spoofing, display name impersonation |
+| **Service** | `EmailContentAnalyzer` | Urgency, credential requests, social engineering detection |
+| **Service** | `BenchmarkService` | Accuracy evaluation against PhishTank/OpenPhish/Alexa |
 | **Service** | `AiService` | LLM integration via Groq API (Llama 3.3 70B) |
-| **Service** | `FirestoreService` | Firebase Firestore CRUD for scan history (scoped by device) |
+| **Service** | `FirestoreService` | Firestore CRUD for scan history (device-scoped) |
 | **Service** | `DeviceIdService` | Anonymous device identification via persistent UUID |
-| **Model** | `ScanResult` | Data structure for URL scan results with serialization |
+| **Model** | `ScanResult`, `EmailScanResult` | Scan result data structures with serialization |
+| **Model** | `MultiModalFeatureSet`, `EmailMultiModalFeatureSet` | Multi-modal feature containers |
+| **Data** | `PhishingDataset` | 170+ URL evaluation dataset |
 | **Config** | `AiConfig` | Centralized AI/API configuration |
 
 ---
@@ -95,112 +122,101 @@ TrustProbe AI follows the **Stacked MVVM (Model-View-ViewModel)** architecture p
 ## 📁 Project Structure
 
 ```
-TrustProbeAI/
-├── lib/
-│   ├── app/
-│   │   ├── app.dart                     # Stacked app configuration (routes + DI)
-│   │   ├── app.locator.dart             # Dependency injection (auto-generated)
-│   │   └── app.router.dart              # Navigation routes (auto-generated)
-│   │
-│   ├── config/
-│   │   └── ai_config.dart               # Groq API key, model, and timeout settings
-│   │
-│   ├── models/
-│   │   └── scan_result.dart             # ScanResult data model with Firestore serialization
-│   │
-│   ├── services/
-│   │   ├── ai_service.dart              # Llama 3.3 70B integration via Groq API
-│   │   ├── phishing_service.dart        # Core phishing detection engine
-│   │   ├── firestore_service.dart       # Firebase Firestore operations (device-scoped)
-│   │   └── device_id_service.dart       # Anonymous device ID generation & persistence
-│   │
-│   ├── ui/
-│   │   ├── views/
-│   │   │   └── home/
-│   │   │       ├── home_view.dart       # Main UI (input, results, history)
-│   │   │       └── home_viewmodel.dart  # Business logic & state management
-│   │   │
-│   │   └── widgets/
-│   │       ├── result_card.dart         # Animated result display with score breakdown
-│   │       └── search_history_table.dart # Responsive history table/card view
-│   │
-│   └── main.dart                        # App entry point (Firebase init + Stacked setup)
+lib/
+├── app/
+│   ├── app.dart                         # Stacked app config (routes + DI)
+│   ├── app.locator.dart                 # Service locator (auto-generated)
+│   └── app.router.dart                  # Routes (auto-generated)
 │
-├── test/
-│   ├── phishing_service_test.dart       # Unit tests for the detection engine
-│   └── widget_test.dart                 # Widget tests
+├── config/
+│   └── ai_config.dart                   # Groq API configuration
 │
-├── web/
-│   └── index.html                       # HTML template with SEO meta tags
+├── data/
+│   └── phishing_dataset.dart            # 170+ URL benchmark dataset
 │
-├── pubspec.yaml                         # Dependencies & project metadata
-├── analysis_options.yaml                # Dart linter configuration
-├── CONTRIBUTING.md                      # Contribution guidelines
-├── LICENSE                              # MIT License
-└── README.md                            # This file
+├── models/
+│   ├── scan_result.dart                 # URL scan result model
+│   ├── email_scan_result.dart           # Email scan result model
+│   ├── feature_set.dart                 # URL feature classes (745 lines)
+│   └── email_feature_set.dart           # Email feature classes (376 lines)
+│
+├── services/
+│   ├── # URL Multi-Modal Engine
+│   ├── url_feature_extractor.dart       # CNN-equiv: 25+ URL features
+│   ├── sequential_analyzer.dart         # LSTM-equiv: 8 sequential features
+│   ├── host_analysis_service.dart       # Host/domain: 10 features
+│   ├── ssl_analysis_service.dart        # SSL/security: 5 features
+│   ├── content_analysis_service.dart    # Content: 7 features
+│   ├── multi_modal_engine.dart          # Combines 5 URL modalities
+│   │
+│   ├── # Email Multi-Modal Engine
+│   ├── email_parser.dart                # Email header/body parser
+│   ├── email_header_analyzer.dart       # Sender reputation, spoofing
+│   ├── email_content_analyzer.dart      # NLP: urgency, credential requests
+│   ├── email_multi_modal_engine.dart    # Combines 4 email modalities
+│   ├── email_phishing_service.dart      # Email analysis orchestrator
+│   │
+│   ├── # Core Services
+│   ├── ai_service.dart                  # Llama 3.3 70B via Groq API
+│   ├── phishing_service.dart            # URL analysis orchestrator
+│   ├── firestore_service.dart           # Firebase Firestore (device-scoped)
+│   ├── device_id_service.dart           # Anonymous device ID
+│   └── benchmark_service.dart           # Accuracy evaluation
+│
+├── ui/
+│   ├── views/home/
+│   │   ├── home_view.dart               # Main screen
+│   │   └── home_viewmodel.dart          # URL + email state management
+│   └── widgets/
+│       ├── result_card.dart             # URL analysis result card
+│       ├── email_result_card.dart       # Email analysis result card
+│       └── search_history_table.dart    # Scan history table
+│
+├── firebase_options.dart                # Firebase config (auto-generated)
+└── main.dart                            # App entry point
 ```
 
 ---
 
-## 🔬 Detection Algorithm
+## 🔬 Detection Engine
 
-TrustProbe AI uses a **two-stage hybrid detection engine**:
+### URL Multi-Modal Analysis (55+ features)
 
-### Stage 1 — Heuristic Analysis (Rule-Based)
+| Modality | Service | Features | Weight | Analogous ML |
+|----------|---------|----------|--------|--------------|
+| **URL Lexical** | `UrlFeatureExtractor` | 25+ (entropy, char distributions, n-grams, digit ratio, path depth, etc.) | 25% | CNN |
+| **Sequential Patterns** | `SequentialAnalyzer` | 8 (char transitions, bigram frequencies, positional distribution, randomness) | 20% | LSTM |
+| **Host/Domain** | `HostAnalysisService` | 10 (TLD risk scores, brand impersonation, domain age, randomness, shorteners) | 25% | Feature Engineering |
+| **SSL/Security** | `SslAnalysisService` | 5 (HTTPS, free SSL indicators, redirect patterns, mixed content) | 15% | Feature Engineering |
+| **Content** | `ContentAnalysisService` | 7 (login page, credential harvesting, data exfiltration, service mimicry) | 15% | NLP |
 
-The engine evaluates URLs against **12 risk factors** and produces a cumulative score:
+### Email Multi-Modal Analysis (30+ features)
 
-#### 🔴 Risk Factors (Increase Score)
+| Modality | Service | Features | Weight |
+|----------|---------|----------|--------|
+| **Header** | `EmailHeaderAnalyzer` | 8 (sender domain risk, display name impersonation, spoofing, reply-to mismatch) | 30% |
+| **Content** | `EmailContentAnalyzer` | 9 (urgency, credential requests, social engineering, financial lures, threats, grammar) | 30% |
+| **Embedded URLs** | `MultiModalEngine` (reused) | 55+ (full URL analysis for each embedded link) | 25% |
+| **Metadata** | `EmailMultiModalEngine` | 5 (HTML ratio, link density, external resource patterns) | 15% |
 
-| Check | Points | Trigger Condition |
-|-------|--------|-------------------|
-| **Suspicious Keywords (Domain)** | +40 | Domain contains words like `bank`, `paypal`, `verify`, `login`, `password`, `wallet`, etc. |
-| **Suspicious Keywords (Path)** | +20 | URL path/query contains suspicious keywords (only if domain doesn't) |
-| **IP Address Usage** | +35 | Domain is a raw IP address (e.g., `192.168.1.1`) |
-| **Brand Impersonation** | +35 | Domain contains brand name but isn't the real brand (e.g., `paypal-secure.xyz`) |
-| **Domain Length** | +30 | Domain exceeds 30 characters |
-| **URL Obfuscation (@)** | +30 | URL contains `@` symbol (redirects before `@` are ignored by browsers) |
-| **HTTPS Security** | +25 | Uses insecure `http://` instead of `https://` |
-| **URL Shortener** | +25 | Known shortener (bit.ly, tinyurl, etc.) with short path |
-| **Suspicious TLD** | +25 | Ends with `.tk`, `.ml`, `.ga`, `.cf`, `.gq`, `.xyz`, `.top`, `.click`, `.link` |
-| **Subdomain Complexity** | +20 | More than 2 subdomain levels |
-| **Excessive Dashes** | +20 | More than 3 dashes in domain |
+### Classification Thresholds
 
-#### 🟢 Trust Factors (Decrease Score)
+| Score Range | Classification |
+|-------------|---------------|
+| 0 – 40 | ✅ Safe |
+| 41 – 70 | ⚠️ Suspicious |
+| 71 – 100 | 🚨 Malicious |
 
-| Check | Points | Trigger Condition |
-|-------|--------|-------------------|
-| **Trusted Domain** | −40 | Exact match or proper subdomain of known trusted domains (Google, Facebook, GitHub, etc.) |
+### Benchmark Dataset
 
-#### Classification Thresholds
+| Source | Count | Type |
+|--------|-------|------|
+| PhishTank | ~50 | Phishing URLs |
+| OpenPhish | ~40 | Phishing URLs |
+| Alexa Top Sites | ~80 | Safe URLs |
+| **Total** | **170+** | Balanced evaluation set |
 
-| Score Range | Classification | Color |
-|-------------|---------------|-------|
-| 0 – 40% | ✅ **Safe** | 🟢 Green |
-| 41 – 70% | ⚠️ **Suspicious** | 🟡 Yellow |
-| 71 – 100% | 🚨 **Malicious** | 🔴 Red |
-
-### Stage 2 — AI Threat Analysis (Llama 3.3 70B)
-
-When configured, the AI engine receives the heuristic results and provides:
-- **Threat Summary** — Concise assessment of the URL's danger level
-- **Specific Risk Factors** — Detailed list of identified threats (typosquatting, homograph attacks, etc.)
-- **Actionable Recommendation** — Clear guidance for the user
-- **Confidence Level** — High / Medium / Low confidence in the assessment
-
-> 💡 AI analysis is optional and non-blocking. The app functions fully with heuristics alone.
-
-### Example Analysis
-
-**Input:** `secure-bank-login.example.com`
-
-| Check | Result | Points |
-|-------|--------|--------|
-| Suspicious Keywords (Domain) | `bank`, `login` detected | +40 |
-| Excessive Dashes | 3 dashes in domain | 0 |
-| Brand Impersonation | `bank` brand but not `bank.com` | +35 |
-| **Total** | | **75%** |
-| **Classification** | | 🚨 **Malicious** |
+Benchmark metrics: **Accuracy**, **Precision**, **Recall**, **F1 Score**, with per-source breakdown.
 
 ---
 
@@ -223,174 +239,58 @@ When configured, the AI engine receives the heuristic results and provides:
 
 ---
 
-## ⚙️ Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Flutter SDK** ≥ 3.10.0 — [Install Flutter](https://docs.flutter.dev/get-started/install)
-- **Chrome** browser (for web development)
-- **Firebase** account — [Create Free Account](https://firebase.google.com)
-- **Groq API key** (optional, for AI features) — [Get Free Key](https://console.groq.com)
+- Flutter 3.10+
+- Dart 3.0+
+- Firebase project (for scan history)
+- Groq API key (for AI analysis — optional)
 
-### 1. Clone the Repository
+### Setup
 
 ```bash
+# Clone the repository
 git clone https://github.com/akshaychandt/TrustProbe-AI.git
 cd TrustProbe-AI
-```
 
-### 2. Install Dependencies
-
-```bash
+# Install dependencies
 flutter pub get
-```
 
-### 3. Generate Stacked Files
+# Configure Firebase
+flutterfire configure
 
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
+# (Optional) Set Groq API key in lib/config/ai_config.dart
+# Replace 'YOUR_GROQ_API_KEY_HERE' with your key from console.groq.com
 
-### 4. Configure Firebase
-
-1. Go to [Firebase Console](https://console.firebase.google.com/) → Create a new project
-2. Enable **Cloud Firestore** → Start in test mode
-3. Add a **Web App** and copy the Firebase configuration
-4. Update `lib/main.dart` with your config:
-
-```dart
-await Firebase.initializeApp(
-  options: const FirebaseOptions(
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID",
-  ),
-);
-```
-
-### 5. Configure AI (Optional)
-
-To enable AI-powered analysis, get a free API key from [Groq Console](https://console.groq.com) and update `lib/config/ai_config.dart`:
-
-```dart
-static const groqApiKey = 'YOUR_GROQ_API_KEY';
-```
-
-### 6. Run the App
-
-```bash
+# Run the app
 flutter run -d chrome
 ```
 
-The app will launch in Chrome at `http://localhost:<port>`.
+### Firebase Setup
 
----
+1. Create a project at [Firebase Console](https://console.firebase.google.com)
+2. Enable **Firestore Database** → Start in test mode
+3. Run `flutterfire configure` to generate `firebase_options.dart`
+4. On first query, Firestore will prompt for a composite index on `(deviceId, timestamp)` — click the link to create it
 
-## 🚀 Deployment
-
-### Build for Production
-
-```bash
-flutter build web --release
-```
-
-Output will be in the `build/web/` directory.
-
-### Deploy to Firebase Hosting
+### Verify Everything
 
 ```bash
-# Install Firebase CLI
-npm install -g firebase-tools
+# Analyze a URL
+# Enter "https://google.com" → Should show "Safe"
+# Enter "http://paypal-login.tk/verify" → Should show "Malicious"
 
-# Login & initialize
-firebase login
-firebase init hosting  # Set public directory to build/web
-
-# Deploy
-firebase deploy
+# Check Firestore
+# Firebase Console → Firestore → url_scans collection should populate
 ```
 
 ---
 
-## 🧪 Testing
+## 🔒 Security
 
-### Run Unit Tests
-
-```bash
-flutter test
-```
-
-### Test URLs
-
-| URL | Expected | Score |
-|-----|----------|-------|
-| `google.com` | ✅ Safe | < 40% |
-| `https://github.com` | ✅ Safe | < 40% |
-| `facebook.com` | ✅ Safe | < 40% |
-| `secure-bank-login.example.com` | 🚨 Malicious | > 70% |
-| `http://paypal-verify.suspicious.com` | 🚨 Malicious | > 60% |
-| `http://192.168.1.1/login` | 🚨 Malicious | > 60% |
-
-### Verify Firestore
-
-1. Analyze a few URLs in the app
-2. Open Firebase Console → Firestore Database
-3. Check that `url_scans` collection has documents **with a `deviceId` field**
-4. Refresh app — only your device's scans should appear
-5. **Composite Index**: On first run, Firestore may prompt you to create a composite index for `(deviceId, timestamp)`. Click the link in the browser console to auto-create it.
-
----
-
-## 🎨 UI Highlights
-
-- **🌙 Dark Theme** — Sleek gradient backgrounds with navy-to-purple transitions
-- **💎 Glassmorphism** — Semi-transparent cards with backdrop blur effects
-- **🎬 Smooth Animations** — Fade-in and slide transitions for result cards
-- **🎯 Color-Coded Risk** — Intuitive green/yellow/red indicators
-- **📊 Score Breakdown** — Visual bar showing each heuristic check's contribution
-- **📋 Responsive Tables** — Desktop table view transforms to mobile card view
-- **⚡ Real-time Updates** — Firestore `StreamBuilder` for live scan history
-
----
-
-## � Extending the Detection Engine
-
-### Adding a New Risk Factor
-
-Edit `lib/services/phishing_service.dart` → `_calculateRiskScore()`:
-
-```dart
-// Example: Detect encoded characters in URL
-if (fullUrl.contains('%') && fullUrl.split('%').length > 3) {
-  breakdown['URL Encoding'] = 20;
-  score += 20;
-} else {
-  breakdown['URL Encoding'] = 0;
-}
-```
-
-Then add a corresponding human-readable reason in `_generateReason()`.
-
-### Adding a Trusted Domain
-
-```dart
-static const List<String> _trustedDomains = [
-  'google.com',
-  'facebook.com',
-  // Add your domain here:
-  'yourtrusted.com',
-];
-```
-
----
-
-## 🔒 Security Notes
-
-- **API Keys**: Never commit real API keys. Use environment variables or `.env` files in production.
-- **Firestore Rules**: The default test-mode rules allow all reads/writes. For production:
+### Firestore Rules (Test Mode)
 
 ```javascript
 rules_version = '2';
@@ -398,51 +298,32 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /url_scans/{document=**} {
       allow read: if true;
-      allow write: if request.resource.data.keys().hasAll(['url', 'riskScore', 'classification', 'deviceId']);
+      allow write: if request.resource.data.keys()
+        .hasAll(['url', 'riskScore', 'classification', 'deviceId']);
     }
   }
 }
 ```
 
----
+### API Key Security
 
-## 🤝 Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'feat: add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+- **Groq API key** is in `ai_config.dart` — for production, use `--dart-define` or a backend proxy
+- **Firebase config** is auto-generated by `flutterfire configure` — safe to commit
 
 ---
 
-## 📄 License
+## 📖 Documentation
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👨‍💻 Author
-
-**Akshay Chand T**
-- GitHub: [@akshaychandt](https://github.com/akshaychandt)
-- Email: akshaychand.t@gmail.com
+For comprehensive technical documentation covering architecture, algorithms, service APIs, feature specifications, error handling, and extensibility, see **[DOCUMENTATION.md](DOCUMENTATION.md)**.
 
 ---
 
-## 🙏 Acknowledgments
+## 📝 License
 
-- [Flutter](https://flutter.dev) — Cross-platform UI framework
-- [Stacked](https://pub.dev/packages/stacked) — MVVM architecture by FilledStacks
-- [Firebase](https://firebase.google.com) — Backend infrastructure
-- [Groq](https://groq.com) — Ultra-fast LLM inference
-- [Meta Llama 3.3](https://ai.meta.com/llama/) — Open-source large language model
-- [Google Fonts](https://fonts.google.com) — Typography
+This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
 <p align="center">
-  Made with ❤️ and Flutter 💙
+  <strong>TrustProbe AI</strong> — Built with Flutter 💙, Llama 3.3 🦙, and multi-modal intelligence 🧠
 </p>

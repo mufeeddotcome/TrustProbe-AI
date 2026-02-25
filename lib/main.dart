@@ -4,21 +4,13 @@ import 'package:trustprobe_ai/app/app.locator.dart';
 import 'package:trustprobe_ai/app/app.router.dart';
 import 'package:trustprobe_ai/services/device_id_service.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase for Web
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyDemoKey123", // Placeholder - User will replace
-      authDomain: "trustprobe-ai.firebaseapp.com",
-      projectId: "trustprobe-ai",
-      storageBucket: "trustprobe-ai.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef123456",
-    ),
-  );
+  // Initialize Firebase with auto-generated config
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Setup Stacked locator (dependency injection)
   setupLocator();
