@@ -22,6 +22,7 @@
 - [14. Security Considerations](#14-security-considerations)
 - [15. Future Roadmap](#15-future-roadmap)
 - [16. Troubleshooting](#16-troubleshooting)
+- [17. Testing & Reporting](#17-testing--reporting)
 
 ---
 
@@ -623,6 +624,45 @@ Click the auto-generated link in the browser console to create the `(deviceId, t
 flutter clean && flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 ```
+
+---
+
+## 17. Testing & Reporting
+
+TrustProbe AI includes a suite of automated tests to ensure detection accuracy and system stability.
+
+### 17.1 Running Tests
+
+To run all unit and functional tests:
+
+```bash
+flutter test
+```
+
+To run a specific test file:
+
+```bash
+flutter test test/phishing_service_test.dart
+```
+
+### 17.2 Generating Automation Test Reports
+
+For academic documentation, you can generate a professional HTML test report:
+
+1. **Run tests and export results to JSON:**
+   ```bash
+   flutter test --machine > test_results.json
+   ```
+
+2. **Generate the HTML report:**
+   ```bash
+   dart run bin/generate_report.dart
+   ```
+
+3. **View the report:**
+   Open `test_report.html` in any web browser.
+
+The generated report includes a summary dashboard with pass/fail counts, total duration, and detailed results for every test case, including error messages and stack traces for failures.
 
 ---
 

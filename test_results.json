@@ -1,0 +1,95 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":6569,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/widget_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading /Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/widget_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":0}
+{"suite":{"id":2,"platform":"vm","path":"/Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/sample_test.dart"},"type":"suite","time":1}
+{"test":{"id":3,"name":"loading /Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/sample_test.dart","suiteID":2,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":1}
+{"suite":{"id":4,"platform":"vm","path":"/Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"suite","time":2}
+{"test":{"id":5,"name":"loading /Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart","suiteID":4,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":2}
+{"count":3,"time":2,"type":"allSuites"}
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":null}}]
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":null}}]
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":null}}]
+{"testID":5,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":999}
+{"group":{"id":6,"suiteID":4,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":27,"line":null,"column":null,"url":null},"type":"group","time":1001}
+{"group":{"id":7,"suiteID":4,"parentID":6,"name":"PhishingService Multi-Modal Tests","metadata":{"skip":false,"skipReason":null},"testCount":8,"line":12,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"group","time":1001}
+{"test":{"id":8,"name":"PhishingService Multi-Modal Tests Safe URL - google.com","suiteID":4,"groupIDs":[6,7],"metadata":{"skip":false,"skipReason":null},"line":19,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1001}
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":1021}
+{"group":{"id":9,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":1021}
+{"test":{"id":10,"name":"(setUpAll)","suiteID":0,"groupIDs":[9],"metadata":{"skip":false,"skipReason":null},"line":10,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/widget_test.dart"},"type":"testStart","time":1021}
+{"testID":3,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":1029}
+{"group":{"id":11,"suiteID":2,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":1030}
+{"group":{"id":12,"suiteID":2,"parentID":11,"name":"PhishingService Sample Tests","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":5,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/sample_test.dart"},"type":"group","time":1030}
+{"test":{"id":13,"name":"PhishingService Sample Tests Analyze a known safe URL (google.com)","suiteID":2,"groupIDs":[11,12],"metadata":{"skip":false,"skipReason":null},"line":12,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/sample_test.dart"},"type":"testStart","time":1030}
+{"testID":8,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1030}
+{"test":{"id":14,"name":"PhishingService Multi-Modal Tests Safe URL - facebook.com","suiteID":4,"groupIDs":[6,7],"metadata":{"skip":false,"skipReason":null},"line":29,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1030}
+{"testID":14,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1033}
+{"test":{"id":15,"name":"PhishingService Multi-Modal Tests Malicious URL - with bank keyword","suiteID":4,"groupIDs":[6,7],"metadata":{"skip":false,"skipReason":null},"line":37,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1033}
+{"testID":15,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1035}
+{"test":{"id":16,"name":"PhishingService Multi-Modal Tests Malicious URL - with paypal keyword and http","suiteID":4,"groupIDs":[6,7],"metadata":{"skip":false,"skipReason":null},"line":47,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1036}
+{"testID":16,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1038}
+{"test":{"id":17,"name":"PhishingService Multi-Modal Tests Malicious URL - IP address","suiteID":4,"groupIDs":[6,7],"metadata":{"skip":false,"skipReason":null},"line":56,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1039}
+{"testID":17,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1041}
+{"test":{"id":18,"name":"PhishingService Multi-Modal Tests Invalid URL format","suiteID":4,"groupIDs":[6,7],"metadata":{"skip":false,"skipReason":null},"line":65,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1041}
+{"testID":10,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":1043}
+{"test":{"id":19,"name":"App basic smoke test","suiteID":0,"groupIDs":[9],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":31,"root_column":3,"root_url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/widget_test.dart"},"type":"testStart","time":1043}
+{"testID":18,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1046}
+{"test":{"id":20,"name":"PhishingService Multi-Modal Tests HTTPS vs HTTP - HTTPS should be safer","suiteID":4,"groupIDs":[6,7],"metadata":{"skip":false,"skipReason":null},"line":73,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1047}
+{"testID":20,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1049}
+{"test":{"id":21,"name":"PhishingService Multi-Modal Tests Multi-modal data is present in results","suiteID":4,"groupIDs":[6,7],"metadata":{"skip":false,"skipReason":null},"line":82,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1049}
+{"testID":21,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1050}
+{"group":{"id":22,"suiteID":4,"parentID":6,"name":"Multi-Modal Engine Tests","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":92,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"group","time":1050}
+{"test":{"id":23,"name":"Multi-Modal Engine Tests Trusted domain gets low score","suiteID":4,"groupIDs":[6,22],"metadata":{"skip":false,"skipReason":null},"line":99,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1050}
+{"testID":23,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1051}
+{"test":{"id":24,"name":"Multi-Modal Engine Tests Phishing URL gets high score","suiteID":4,"groupIDs":[6,22],"metadata":{"skip":false,"skipReason":null},"line":109,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1051}
+{"testID":24,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1053}
+{"test":{"id":25,"name":"Multi-Modal Engine Tests IP-based URL gets flagged","suiteID":4,"groupIDs":[6,22],"metadata":{"skip":false,"skipReason":null},"line":118,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1053}
+{"testID":25,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1055}
+{"test":{"id":26,"name":"Multi-Modal Engine Tests Feature count is correct (55 total)","suiteID":4,"groupIDs":[6,22],"metadata":{"skip":false,"skipReason":null},"line":126,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1055}
+{"testID":26,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1056}
+{"group":{"id":27,"suiteID":4,"parentID":6,"name":"URL Feature Extractor (CNN) Tests","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":135,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"group","time":1056}
+{"test":{"id":28,"name":"URL Feature Extractor (CNN) Tests Extracts correct feature count","suiteID":4,"groupIDs":[6,27],"metadata":{"skip":false,"skipReason":null},"line":142,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1056}
+{"testID":13,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1057}
+{"test":{"id":29,"name":"PhishingService Sample Tests Analyze a suspicious IP-based URL","suiteID":2,"groupIDs":[11,12],"metadata":{"skip":false,"skipReason":null},"line":19,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/sample_test.dart"},"type":"testStart","time":1057}
+{"testID":28,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1057}
+{"test":{"id":30,"name":"URL Feature Extractor (CNN) Tests Entropy is higher for random URLs","suiteID":4,"groupIDs":[6,27],"metadata":{"skip":false,"skipReason":null},"line":149,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1057}
+{"testID":30,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1058}
+{"test":{"id":31,"name":"URL Feature Extractor (CNN) Tests Detects at symbol","suiteID":4,"groupIDs":[6,27],"metadata":{"skip":false,"skipReason":null},"line":159,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1058}
+{"testID":29,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1058}
+{"test":{"id":32,"name":"PhishingService Sample Tests Check if multi-modal data is populated","suiteID":2,"groupIDs":[11,12],"metadata":{"skip":false,"skipReason":null},"line":26,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/sample_test.dart"},"type":"testStart","time":1059}
+{"testID":31,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1059}
+{"group":{"id":33,"suiteID":4,"parentID":6,"name":"Sequential Analyzer (LSTM) Tests","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":167,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"group","time":1059}
+{"test":{"id":34,"name":"Sequential Analyzer (LSTM) Tests Extracts correct feature count","suiteID":4,"groupIDs":[6,33],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1059}
+{"testID":34,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1060}
+{"testID":32,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1060}
+{"test":{"id":35,"name":"Sequential Analyzer (LSTM) Tests Random domain has higher anomaly","suiteID":4,"groupIDs":[6,33],"metadata":{"skip":false,"skipReason":null},"line":181,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1060}
+{"testID":35,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1062}
+{"group":{"id":36,"suiteID":4,"parentID":6,"name":"Host Analysis Tests","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":195,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"group","time":1062}
+{"test":{"id":37,"name":"Host Analysis Tests Trusted domain is detected","suiteID":4,"groupIDs":[6,36],"metadata":{"skip":false,"skipReason":null},"line":202,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1062}
+{"testID":37,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1063}
+{"test":{"id":38,"name":"Host Analysis Tests Brand impersonation is detected","suiteID":4,"groupIDs":[6,36],"metadata":{"skip":false,"skipReason":null},"line":207,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1063}
+{"testID":38,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1064}
+{"test":{"id":39,"name":"Host Analysis Tests High-risk TLD is scored","suiteID":4,"groupIDs":[6,36],"metadata":{"skip":false,"skipReason":null},"line":215,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1064}
+{"testID":39,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1066}
+{"test":{"id":40,"name":"Host Analysis Tests IP address is detected","suiteID":4,"groupIDs":[6,36],"metadata":{"skip":false,"skipReason":null},"line":220,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1066}
+{"testID":40,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1067}
+{"group":{"id":41,"suiteID":4,"parentID":6,"name":"ScanResult Model Tests","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":228,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"group","time":1067}
+{"test":{"id":42,"name":"ScanResult Model Tests Risk color - low risk","suiteID":4,"groupIDs":[6,41],"metadata":{"skip":false,"skipReason":null},"line":229,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1067}
+{"testID":42,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1067}
+{"test":{"id":43,"name":"ScanResult Model Tests Risk color - medium risk","suiteID":4,"groupIDs":[6,41],"metadata":{"skip":false,"skipReason":null},"line":242,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1067}
+{"testID":43,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1068}
+{"test":{"id":44,"name":"ScanResult Model Tests Risk color - high risk","suiteID":4,"groupIDs":[6,41],"metadata":{"skip":false,"skipReason":null},"line":255,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1068}
+{"testID":44,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1068}
+{"test":{"id":45,"name":"ScanResult Model Tests toMap and fromFirestore with multi-modal data","suiteID":4,"groupIDs":[6,41],"metadata":{"skip":false,"skipReason":null},"line":268,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1068}
+{"testID":45,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1072}
+{"group":{"id":46,"suiteID":4,"parentID":6,"name":"Benchmark Tests","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":296,"column":3,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"group","time":1072}
+{"test":{"id":47,"name":"Benchmark Tests Benchmark achieves >= 95% accuracy","suiteID":4,"groupIDs":[6,46],"metadata":{"skip":false,"skipReason":null},"line":303,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1072}
+{"testID":47,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1106}
+{"test":{"id":48,"name":"Benchmark Tests Benchmark has sufficient dataset size","suiteID":4,"groupIDs":[6,46],"metadata":{"skip":false,"skipReason":null},"line":355,"column":5,"url":"file:///Users/akshaychandt/Freelance/Accademic/TrustProbeAI/test/phishing_service_test.dart"},"type":"testStart","time":1106}
+{"testID":48,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1130}
+{"testID":19,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1393}
+{"test":{"id":49,"name":"(tearDownAll)","suiteID":0,"groupIDs":[9],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":1394}
+{"testID":49,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":1396}
+{"success":true,"type":"done","time":1400}
