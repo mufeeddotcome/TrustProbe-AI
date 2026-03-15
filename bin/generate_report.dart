@@ -1,16 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:inline_logger/inline_logger.dart';
+
 void main() async {
   final resultsFile = File('test_results.json');
   if (!await resultsFile.exists()) {
-    print('Error: test_results.json not found. Please run "flutter test --machine > test_results.json" first.');
+    Logger.info(
+      'Error: test_results.json not found. Please run "flutter test --machine > test_results.json" first.',
+    );
     exit(1);
   }
 
   final lines = await resultsFile.readAsLines();
   final List<dynamic> events = [];
-  
+
   for (var line in lines) {
     line = line.trim();
     if (line.isEmpty) continue;
@@ -35,7 +39,7 @@ void main() async {
   final html = _generateHtml(summary);
 
   await File('test_report.html').writeAsString(html);
-  print('Test report generated: test_report.html');
+  Logger.info('Test report generated: test_report.html');
 }
 
 class TestSummary {
@@ -70,7 +74,7 @@ TestSummary _processEvents(List<dynamic> events) {
 
   for (var event in events) {
     final type = event['type'];
-    
+
     if (type == 'start' && startTime == null) {
       startTime = DateTime.fromMillisecondsSinceEpoch(event['time'] ?? 0);
     }
@@ -97,9 +101,11 @@ TestSummary _processEvents(List<dynamic> events) {
       final testInfo = testDetails[testId];
 
       if (testInfo != null) {
-        final duration = Duration(milliseconds: event['time'] - testInfo['startTime']);
+        final duration = Duration(
+          milliseconds: event['time'] - testInfo['startTime'],
+        );
         final testName = testInfo['name'] as String;
-        
+
         // Skip group/loading events that aren't actual tests if name is empty or similar
         if (testName.isEmpty || testName.startsWith('loading ')) continue;
 
@@ -112,14 +118,16 @@ TestSummary _processEvents(List<dynamic> events) {
           summary.skipCount++;
         }
 
-        summary.tests.add(TestResult(
-          name: testName,
-          status: result,
-          duration: duration,
-          error: testInfo['error'],
-          stackTrace: testInfo['stackTrace'],
-        ));
-        
+        summary.tests.add(
+          TestResult(
+            name: testName,
+            status: result,
+            duration: duration,
+            error: testInfo['error'],
+            stackTrace: testInfo['stackTrace'],
+          ),
+        );
+
         summary.totalDuration += duration;
       }
     }
@@ -130,25 +138,30 @@ TestSummary _processEvents(List<dynamic> events) {
 
 String _generateHtml(TestSummary summary) {
   final now = DateTime.now();
-  final timestamp = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} '
+  final timestamp =
+      '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} '
       '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
 
-  final rows = summary.tests.map((t) {
-    final statusClass = t.status == 'success' ? 'status-pass' : (t.status == 'failure' ? 'status-fail' : 'status-skip');
-    final statusText = t.status.toUpperCase();
-    final duration = '${t.duration.inMilliseconds}ms';
-    
-    String errorSection = '';
-    if (t.error != null) {
-      errorSection = '''
+  final rows = summary.tests
+      .map((t) {
+        final statusClass = t.status == 'success'
+            ? 'status-pass'
+            : (t.status == 'failure' ? 'status-fail' : 'status-skip');
+        final statusText = t.status.toUpperCase();
+        final duration = '${t.duration.inMilliseconds}ms';
+
+        String errorSection = '';
+        if (t.error != null) {
+          errorSection =
+              '''
         <div class="error-msg">
           <strong>Error:</strong> ${t.error}<br>
           <pre>${t.stackTrace ?? ''}</pre>
         </div>
       ''';
-    }
+        }
 
-    return '''
+        return '''
       <tr>
         <td>${t.name}</td>
         <td><span class="status-badge $statusClass">$statusText</span></td>
@@ -156,9 +169,12 @@ String _generateHtml(TestSummary summary) {
       </tr>
       ${t.status == 'failure' ? '<tr><td colspan="3">$errorSection</td></tr>' : ''}
     ''';
-  }).join('\n');
+      })
+      .join('\n');
 
-  final passRate = summary.totalCount > 0 ? (summary.successCount / summary.totalCount * 100).toStringAsFixed(1) : '0';
+  final passRate = summary.totalCount > 0
+      ? (summary.successCount / summary.totalCount * 100).toStringAsFixed(1)
+      : '0';
 
   return '''
 <!DOCTYPE html>
